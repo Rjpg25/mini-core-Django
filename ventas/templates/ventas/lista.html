@@ -1,0 +1,177 @@
+{% extends "ventas/base.html" %}
+
+{% block title %}Ventas | Mini Core{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Gestión de ventas</h1>
+        <p class="text-secondary mb-0">
+            Registra y administra las ventas de tus vendedores.
+        </p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+    <a href="{% url 'ventas:comisiones' %}" class="btn btn-outline-primary">
+        Calcular comisiones
+    </a>
+
+    <a href="{% url 'ventas:crear' %}" class="btn btn-primary">
+        + Registrar venta
+    </a>
+</div>
+</div>
+
+<div class="card p-4 mb-4">
+    <h2 class="h5 fw-bold mb-3">Filtrar ventas</h2>
+
+    <form method="get" action="{% url 'ventas:lista' %}">
+        {% for error in filtro_form.non_field_errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endfor %}
+
+        <div class="row g-3 align-items-end">
+            {% for field in filtro_form %}
+                <div class="col-md-3">
+                    <label
+                        for="{{ field.id_for_label }}"
+                        class="form-label"
+                    >
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% for error in field.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="col-md-3">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Filtrar
+                    </button>
+
+                    <a
+                        href="{% url 'ventas:lista' %}"
+                        class="btn btn-outline-secondary"
+                    >
+                        Limpiar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <p class="small text-secondary mt-3 mb-0">
+        La cantidad y el monto de ventas corresponden a los filtros seleccionados.
+    </p>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="stat-label">Ventas registradas</div>
+            <div class="stat-value">{{ total_ventas }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="stat-label">Monto total vendido</div>
+            <div class="stat-value">${{ total_monto|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-4">
+            <div class="stat-label">Vendedores registrados</div>
+            <div class="stat-value">{{ total_vendedores }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 overflow-hidden">
+    <div class="p-4 border-bottom">
+        <h2 class="h5 fw-bold mb-0">Ventas registradas</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">ID</th>
+                    <th>Vendedor</th>
+                    <th>Fecha</th>
+                    <th>Monto</th>
+                    <th class="text-end pe-4">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for venta in ventas %}
+                    <tr>
+                        <td class="ps-4">#{{ venta.pk }}</td>
+                        <td class="fw-semibold">{{ venta.vendedor.nombre }}</td>
+                        <td>{{ venta.fecha_venta|date:"d/m/Y" }}</td>
+                        <td>${{ venta.monto|floatformat:2 }}</td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a
+                                    href="{% url 'ventas:editar' venta.pk %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Editar
+                                </a>
+                                <a
+                                    href="{% url 'ventas:eliminar' venta.pk %}"
+                                    class="btn btn-sm btn-outline-danger"
+                                >
+                                    Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-secondary py-5">
+                            No hay ventas para mostrar con los criterios seleccionados.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card p-4">
+    <h2 class="h5 fw-bold mb-3">Reglas de comisión activas</h2>
+
+    <div class="row g-3">
+        {% for regla in reglas %}
+            <div class="col-md-4">
+                <div class="border rounded-3 p-3 h-100">
+                    <div class="h4 text-primary fw-bold">
+                        {{ regla.porcentaje_display }}
+                    </div>
+                    <div class="text-secondary">
+                        Para ventas desde
+                        ${{ regla.monto_minimo|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-secondary">
+                No hay reglas activas.
+            </div>
+        {% endfor %}
+    </div>
+
+    <p class="small text-secondary mt-3 mb-0">
+        Se aplica la regla con el mayor monto mínimo que alcance la venta.
+    </p>
+</div>
+{% endblock %}

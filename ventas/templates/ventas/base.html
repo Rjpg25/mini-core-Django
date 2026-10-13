@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Mini Core{% endblock %}</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f4f6fb;
+            color: #172033;
+        }
+
+        .navbar {
+            background: #172033;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .card {
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(23, 32, 51, .06);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: .9rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .table th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: .85rem;
+        }
+
+        .btn {
+            border-radius: 9px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-dark">
+        <div class="container py-2">
+            <a class="navbar-brand" href="{% url 'ventas:lista' %}">
+                MINI CORE
+            </a>
+            <span class="text-white-50 small">
+                Ventas y comisiones
+            </span>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="container pb-4 text-center text-secondary small">
+        Mini Core · Gestión de ventas y comisiones
+    </footer>
+</body>
+</html>
