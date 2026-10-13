@@ -8,7 +8,7 @@ Proyecto académico desarrollado por Ricardo Piñango, estudiante de Ingeniería
 
 Funcionalidad local implementada y comprobada manualmente.
 
-Despliegue público y video de demostración pendientes.
+Aplicación desplegada en Render con PostgreSQL.video de demostración pendientes.
 
 ## Funcionalidades
 
@@ -251,7 +251,7 @@ El script `build.sh` instala dependencias, recoge archivos estáticos y aplica m
 
 La base PostgreSQL es independiente de SQLite: los datos locales no se transfieren automáticamente.
 
-**URL pública:** pendiente de añadir después del despliegue.
+**URL pública:** https://mini-core-django-rsbm.onrender.com/
 
 ## Acceso a la aplicación
 
